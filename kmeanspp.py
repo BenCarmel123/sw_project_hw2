@@ -1,7 +1,7 @@
-import math 
 import sys
 import numpy as np
 import pandas as pd 
+import mykmeanspp 
 
 def isFloat(x):
     try:
@@ -72,28 +72,45 @@ def create_centroids(k, data):
             distances.append(d)
             total_dist += d
         distances = np.array(distances)
-        prob = distances / total_dist
+        try: # Division-by-zero exception handling
+            prob = distances / total_dist 
+        except ZeroDivisionError:
+            print()
+            print("An Error Has Occured")
+            sys.exit(1)
         new_choice = np.random.choice(data.shape[0], p = prob)
-        print ("," + str(new_choice), end = "")
+        print ("," + str(data.index[new_choice]), end = "")
+        print("$$$$$$$$$$$$$$$$$$$$$$")
+        print (data.index[new_choice])
+        print (data.iloc[new_choice])
         new_centroid = data.iloc[new_choice]
         data = data.drop(new_choice)
         centroids.append(new_centroid)
+    print()
     return centroids
-
-def has_converged(old_centroids, new_centroids, epsilon): # Checks if distance of all vectors < 0.001
-    for old, new in zip(old_centroids, new_centroids):
-        if np.linalg.norm(old - new) >= epsilon:
-            return False
-    return True
     
 def print_cents(centroids): # Helper function for printing centroids
     for centroid in centroids:
         print(",".join(f"{float(x):.4f}" for x in centroid))
 
+def npToList(list): # Helper function for converting Numpy matrix to Python list
+    new_list = []
+    for vector in list:
+        new_list.append(vector.tolist())
+    return new_list
+
 def main():
-    k, iter, epsilon, data = read_data(sys.argv)
-    initial_centroids = create_centroids(k, data)
-    return (k, iter, epsilon, initial_centroids)
+    k, iter, epsilon, np_data = read_data(sys.argv)
+    np_initial_centroids = create_centroids(k, np_data)
+    initial_centroids = npToList(np_initial_centroids)
+    data = npToList(np_data.values)
+    try: # Handling of any error encountered in C program
+        final = mykmeanspp.fit(k, iter, epsilon, data, initial_centroids)
+        print_cents(final)
+    except:
+        print("An Error Has Occured")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
+    

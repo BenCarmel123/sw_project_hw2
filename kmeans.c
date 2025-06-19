@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "kmeans.h"
 
 double euclideanDist(double* x, double*y, int dim) { /* Calculate Euclidean distance between 2 Vectors */
     double sum = 0.0;
@@ -128,7 +129,7 @@ int updateCentr(double*** clusters, int* clusterSizes, double*** centroids, int 
 
 static double** convertPythonToC(PyObject *python_data, int *num_of_vectors, int *dimension) {
     /* Convert Python list of lists to C double array */
-    PY_ssize_t i, k, j;
+    Py_ssize_t i, k, j;
     Py_ssize_t size = PyList_Size(python_data);
     *num_of_vectors = (int)size;
     *dimension = (int)PyList_Size(PyList_GetItem(python_data, 0));
@@ -180,7 +181,7 @@ PyObject* runKmeans(int k, int iter, double epsilon, PyObject *python_data, PyOb
     double*** clusters;
     double** centroids, **vectors;
     int* clusterSizes;
-
+    PyObject *final_centroids;
     vectors = convertPythonToC(python_data, &num_of_vectors, &dimension); 
     centroids = convertPythonToC(python_centroids, &k, &dimension); 
 
