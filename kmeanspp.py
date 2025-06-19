@@ -80,11 +80,8 @@ def create_centroids(k, data):
             sys.exit(1)
         new_choice = np.random.choice(data.shape[0], p = prob)
         print ("," + str(data.index[new_choice]), end = "")
-        print("$$$$$$$$$$$$$$$$$$$$$$")
-        print (data.index[new_choice])
-        print (data.iloc[new_choice])
         new_centroid = data.iloc[new_choice]
-        data = data.drop(new_choice)
+        data = data.drop(data.index[new_choice])
         centroids.append(new_centroid)
     print()
     return centroids
