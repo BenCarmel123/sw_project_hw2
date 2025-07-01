@@ -17,11 +17,15 @@ def calcMin(x ,centroids): # Find the closest centroid to vector X
 
 def read_data(args): # read info from terminal 
     length = len(args)
+    if length > 6:
+        print("An Error Has Occurred")
+        sys.exit(1)
     flag = 0 
     try:
-        k = int(args[1])
-        if k == 0:
+        k_val = float(args[1])
+        if not k_val.is_integer() or k_val < 2:
             raise Exception
+        k = int(k_val)
     except:
         print("Invalid number of clusters!")
         sys.exit(1) #Error 1 - stop program 
@@ -34,19 +38,21 @@ def read_data(args): # read info from terminal
         epsilon = args[2]
     else:
         try:
-            if int(iter) in range(2,1000):
-                iter = int(iter)
+            iter_val = float(iter)
+            if not iter_val.is_integer() or not (2 <= iter_val < 1000):
+                raise Exception
+            iter = int(iter_val)
         except:
             print('Invalid maximum iteration!')
             sys.exit(1) #Error 2 - stop program
 
     if (not isFloat(epsilon)):
         print("Invalid epsilon!")
-        sys.exit() #Error 3 - stop program
+        sys.exit(1) #Error 3 - stop program
     epsilon = float(epsilon)
     if (epsilon < 0.0):
         print("Invalid epsilon!")
-        sys.exit() #Error 3 - stop program
+        sys.exit(1) #Error 3 - stop program
 
     file_name1 = args[4 - flag]
     file_name2 = args[5 - flag]
@@ -55,6 +61,10 @@ def read_data(args): # read info from terminal
     merged_df = pd.merge(df1, df2, how = "inner", left_on = df1.columns[0], right_on = df2.columns[0])
     final_data = merged_df.sort_values(by = merged_df.columns[0], ascending = True).set_index(df1.columns[0])
     final_data = final_data.reset_index(drop=True)
+    n = final_data.shape[0]
+    if k > n:
+        print("Invalid number of clusters!")
+        sys.exit(1)
     return (k, iter, epsilon, final_data)
 
 def create_centroids(k, data):
