@@ -12,14 +12,6 @@ def main():
         inertia = algo.inertia_
         results.append((k, inertia))
     x_coordinates, y_coordinates = zip(*results)
-<<<<<<< HEAD
-    max_inertia = max(y_coordinates)
-    fig, ax = plt.subplots()
-    ax.set_xlim(0, None)
-    ax.set_xticks(np.arange(0, 11.5, 1))
-    ax.set_ylim(0, None)
-    ax.set_yticks(np.arange(0, max_inertia * 1.15, 100))
-=======
     max_point = np.array([0, y_coordinates[0]])
     min_point = np.array([9, y_coordinates[9]])
     max_distance = 0
@@ -40,20 +32,12 @@ def main():
     ax.set_xlim(0, None)
     ax.set_xticks(np.arange(0, 11.5, 1))
     ax.set_ylim(min(y_coordinates) * 0.95, max(y_coordinates) * 1.05)
->>>>>>> d8c3a732f244a7e0bfb11c9922ebdaabd7018497
     font1 = {'family':'serif','color':'red','size': 14, 'style': 'italic'}
     font2 = {'family':'serif','color':'red','size': 10, 'style': 'italic'}
     ax.set_title('Elbow Method for selection of optimal "K" clusters', fontdict = font1)
     ax.set_xlabel("K", fontdict=font2)
     ax.set_ylabel("Average Dispersion", fontdict=font2)
     ax.plot(x_coordinates, y_coordinates, linestyle='-', color='blue', label='Inertia Plot')
-<<<<<<< HEAD
-    elbow = (3,results[2][1])
-    ax.grid()
-    ax.legend(['Inertia Plot', 'Elbow'])
-if __name__ == '__main__':
-    main()
-=======
     elbow_x = max_k
     elbow_y = max_inertia
     ax.plot(elbow_x, elbow_y, marker='o', color='red', markersize=24, markerfacecolor='none', linestyle='none', label='Elbow')
@@ -67,7 +51,6 @@ if __name__ == '__main__':
 
     ax.grid()
     ax.legend(fontsize=14)
->>>>>>> d8c3a732f244a7e0bfb11c9922ebdaabd7018497
     plt.savefig('elbow.png')
     plt.show()
    
